@@ -1,0 +1,14 @@
+{
+  "presets": ["next/babel", "env"],
+  "plugins": [
+    "emotion",
+    "transform-class-properties",
+    [
+      "inline-import",
+      {
+        "extensions": [".css"]
+      }
+    ]
+  ],
+  "ignore": []
+}
