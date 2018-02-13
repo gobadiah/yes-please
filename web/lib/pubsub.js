@@ -34,7 +34,7 @@ export const subscribe = (topicName, subscriptionName, handler) => {
     handler(data);
   }
   function handleError(err) {
-    console.err(err);
+    console.warn(err);
   }
 
   return new Promise((resolve, reject) => {

@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+source $SCRIPTPATH/../config
+
+source $SCRIPTPATH/lib
+
+deploy_web
+
+deploy_youtube_speech_recognition

@@ -1,0 +1,92 @@
+#!/bin/zsh
+
+function create_bucket() {
+  if gsutil ls | grep -q $BUCKET
+  then
+    echo "Bucket $BUCKET already exists."
+    return
+  fi
+  gsutil mb $BUCKET
+}
+
+function delete_bucket() {
+  if ! gsutil ls | grep -q $BUCKET
+  then
+    return
+  fi
+  gsutil rb $BUCKET
+}
+
+function create_cluster() {
+  if gcloud container clusters list | grep -q "^$CLUSTER_NAME\\s"
+  then
+    return
+  fi
+  gcloud container clusters create $CLUSTER_NAME --scopes=https://www.googleapis.com/auth/pubsub --num-nodes=1
+}
+
+function delete_cluster() {
+  if ! gcloud container clusters list | grep -q "^$CLUSTER_NAME\\s"
+  then
+    return
+  fi
+  gcloud container clusters delete $CLUSTER_NAME
+}
+
+function get_web_tag() {
+  pushd $SCRIPTPATH/../../web
+
+  TAG=$ENV-$(jq -r '.version' package.json)
+
+  popd
+}
+
+function get_web_image() {
+  get_web_tag
+
+  IMAGE="gcr.io/${PROJECT}/web:$TAG"
+}
+
+function build_web() {
+  get_web_image
+
+  pushd $SCRIPTPATH/../../web
+
+  docker build -t $IMAGE .
+
+  gcloud docker -- push $IMAGE 
+
+  popd
+}
+
+function deploy_web() {
+  build_web
+
+  get_web_image
+
+  kubectl set image deployment/web web=$IMAGE
+}
+
+function setup_web() {
+  build_web
+
+  get_web_image
+
+  kubectl config use-context $KUBECTL_CONTEXT
+
+  if kubectl get deployments | grep "^web\\s"
+  then
+    return
+  fi
+  kubectl run web --image=$IMAGE --port $WEB_PORT
+
+  kubectl expose deployment web --type=LoadBalancer --port 80 --target-port $WEB_PORT
+}
+
+function deploy_youtube_speech_recognition() {
+  pushd $SCRIPTPATH/../../youtube-speech-recognition
+
+  gcloud beta functions deploy downloadYoutubeVideo --trigger-topic ask-topic --timeout 300 --retry
+
+  popd
+}
