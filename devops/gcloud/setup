@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
+
+source $SCRIPTPATH/../config
+
+source $SCRIPTPATH/lib
+
+create_bucket
+
+create_cluster
+
+setup_web
+
+deploy_youtube_speech_recognition

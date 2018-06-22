@@ -49,7 +49,7 @@ const handler = (data) => {
 
 subscribe(responseTopic, subscriptionName, handler)
   .then(() => console.log('Subscribed to', responseTopic))
-  .catch(err => console.err('Error subscribing to', responseTopic, ':', err));
+  .catch(err => console.warn('Error subscribing to', responseTopic, ':', err));
 
 io.on('connection', (socket) => {
   socket.on('message', (url) => {
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
       };
       publish(askTopic, { url })
         .then(() => console.log('Published', url, 'to', askTopic))
-        .catch(err => console.err('Error publishing', url, 'to', askTopic, ':', err));
+        .catch(err => console.warn('Error publishing', url, 'to', askTopic, ':', err));
     } else if (db[url].response) {
       console.log('Response already available for', url);
       socket.emit('message', db[url].response);

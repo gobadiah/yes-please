@@ -1,5 +1,6 @@
 {
   "name": "yes-please",
+  "version": "0.1.2",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "babel-node bin/server.js",

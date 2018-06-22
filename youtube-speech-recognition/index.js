@@ -9,7 +9,7 @@ const publish = require('./lib/pubsub').publish;
 
 const responseTopic = 'response-topic';
 
-const bucketName = 'yes-please-michael-development';
+const bucketName = 'youtube-speech-recognition-development';
 
 module.exports.downloadYoutubeVideo = function(event, callback) {
   try {
@@ -21,7 +21,7 @@ module.exports.downloadYoutubeVideo = function(event, callback) {
     console.log('url =', url);
     const speech = require('@google-cloud/speech');
     const base64 = require('base64-stream');
-    const projectId = 'yes-please-michael';
+    const projectId = 'youtube-speech-recognition';
     const youtubedl = require('youtube-dl');
     const storage = require('@google-cloud/storage')();
     const bucket = storage.bucket(bucketName);

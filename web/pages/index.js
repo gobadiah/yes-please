@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from 'emotion';
 
 import { ToastContainer, toast } from 'react-toastify';
 import { RingLoader } from 'react-spinners';
@@ -11,6 +12,10 @@ import Main from '../components/main';
 
 import { Flex, FlexColumn, FlexColumnCenter } from '../components/styled';
 import { blue } from '../styles';
+
+const buttonsCss = css`
+  width: 220px;
+`;
 
 class Index extends React.Component {
   constructor(props) {
@@ -88,11 +93,13 @@ class Index extends React.Component {
 
   handleMessage = (message) => {
     if (!message.results) {
+      this.setState({ showSpinner: false });
       toast.error('A problem occurred while transcribing video');
       return;
     }
     let transcript = '';
     if (!Array.isArray(message.results)) {
+      this.setState({ showSpinner: false });
       toast.error('A problem occurred while transcribing video');
       return;
     }
@@ -196,7 +203,7 @@ class Index extends React.Component {
                     { // eslint-disable-next-line jsx-a11y/media-has-caption
                     }<video
                       ref={node => this.setupPlayer(node)}
-                      className='video-js'
+                      className='video-js vjs-big-play-centered'
                     />
                   </div>
                 </div>
@@ -219,6 +226,7 @@ class Index extends React.Component {
                     <img
                       src='/static/watchVideo.png'
                       alt='Watch video'
+                      className={buttonsCss}
                     />
                   </button>
                   <button
@@ -238,6 +246,7 @@ class Index extends React.Component {
                     <img
                       src='/static/readVideo.png'
                       alt='Read video'
+                      className={buttonsCss}
                     />
                   </button>
                 </FlexColumnCenter>

@@ -1,0 +1,13 @@
+#!/bin/zsh
+
+PROJECT=${PROJECT:=$(gcloud config get-value core/project 2>/dev/null)}
+ZONE=${ZONE:=$(gcloud config get-value compute/zone 2>/dev/null)}
+REGION=${REGION:=$(gcloud config get-value compute/region 2>/dev/null)}
+ENV=${ENV:=development}
+
+BUCKET="gs://$PROJECT-$ENV/"
+
+CLUSTER_NAME="$PROJECT-$ENV"
+KUBECTL_CONTEXT="gke_"$PROJECT"_"$ZONE"_"$CLUSTER_NAME
+
+WEB_PORT=8080
